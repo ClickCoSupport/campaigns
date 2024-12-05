@@ -1,11 +1,8 @@
-window.addEventListener("DOMContentLoaded", () => {
-	if (document.querySelector('#myTab > li:nth-child(1).active')) {
-		document.querySelector('#Description-tab').click()
-	}
-});
-
-window.addEventListener('load', function () {
+const campaignFunctions = (function () {
 	if (window.location.href.includes('templates/fundraising')) {
+		if (document.querySelector('#myTab > li:nth-child(1).active')) {
+			document.querySelector('#Description-tab').click()
+		}
 		/* Pre Chanukah Campaign */
 		function preChanukahCampaignGeneric(campaignSettings) {
 			function checkAndsetupBonusRound() {
@@ -102,20 +99,6 @@ window.addEventListener('load', function () {
 					"Left until <strong>Campaign</strong> starts!<br><div style='font-size:16px;margin: 0 auto;margin-top:10px;width: 90%;line-height:130%; text-transform: none;'>We are accepting pre-donations now.<br> Campaign goes LIVE on " + campaignSettings.liveDateNice + "</div>"
 				);
 			}
-			function setPreDonatePartnersMessage() {
-				$j('.fs-partners .fs-partners-list-container').html(
-					"<div class='fs-predonate-message'></div>"
-				);
-			}
-			function hideGoalRaisedTotalForPreDonate() {
-				$j('.fs-goal .fs-goal-graph-container .fs-goal-graph .fs-goal-graph-fill').hide();
-				$j('.fs-goal .fs-goal-graph-container .fs-total-raised-amount').hide();
-				$j('.fs-goal .fs-goal-graph-container .fs-total-raised-amount').closest(".fs-goal-graph-value").prepend(
-					"<span>$0</span>");
-				$j('.fs-goal .fs-goal-graph-container .fs-percent-complete-amount').hide();
-				$j('.fs-goal .fs-goal-graph-container .fs-percent-complete-amount').closest(".fs-goal-graph-value").prepend(
-					"<span>0%</span>");
-			}
 			function changeDonateButtonsToPreDonate() {
 				// Add Pre Donate Button to main donate
 				$j('.fs-donate .fs-btn').prepend("Pre-");
@@ -126,22 +109,11 @@ window.addEventListener('load', function () {
 				window.setTimeout(replacePartnersButtonWithPreDonate, 500);
 				window.setTimeout(replacePartnersButtonWithPreDonate, 1000);
 			}
-
-			function hidePartnersButton() {
-				// Hide but also add a class of "very-hidden" to prevent it being shown by ajax response of partners list
-				$j('.fs-partners #showAllDonorsButton').hide().addClass("very-hidden");
-			}
-			function showPreDonateButton() {
-				$j('.fs-partners #temporaryDonateButton').show().html(
-					'Pre-Donate <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>');
-			}
 			function enterPreDonateMode() {
 				addPreDonateClassToBody();
 				changeCountDownToPreDonate();
 				setPreDonateCountDownMessage();
-				//setPreDonatePartnersMessage();
 				changeDonateButtonsToPreDonate()
-				//hideGoalRaisedTotalForPreDonate();
 			}
 			function checkIfCampaignStarted(campaignStartTime) {
 				var timeNow = getTimeNow();
@@ -225,6 +197,9 @@ window.addEventListener('load', function () {
 					addJSProcessedBodyClass();
 					if (!isCampaignOver()) {
 						jQuery(".fs-matchers .fs-matchers-intro .fs-smaller-text").append(" Our generous matchers will continue the triple-match until January 1st.");
+					} else if (isCampaignOver()) {
+						jQuery(".fs-matchers .fs-matchers-intro").html(campaignSettings.bonusRoundMessage);
+						jQuery(".fs-countdown").html(campaignSettings.campaignOverMessage);
 					}
 				}
 			}
@@ -257,26 +232,12 @@ window.addEventListener('load', function () {
 					);
 				}
 			}
-			function reportDonations() {
-				jQuery(document).on("fundraising:donation-completed", function (event, data) {
-					if (ga) {
-						ga('ecommerce:addTransaction', {
-							'id': data.Id,
-							'affiliation': 'Pre-Chanukah Miracle Campaign',
-							'revenue': data.Amount,
-						});
-					}
-				});
-			}
 			function checkAndSetupHomepageBanner() {
 				if (isSiteHomepage()) setupHomepageBanner();
 			}
-			jQuery(document).ready(function () {
-				checkAndSetupHomepageBanner();
-				initializeCampaign();
-				checkAndSetupSiteBy();
-				// reportDonations();
-			});
+			checkAndSetupHomepageBanner();
+			initializeCampaign();
+			checkAndSetupSiteBy();
 		}
 		preChanukahCampaignGeneric({
 			originalCampaignGoal: "$540,000",
@@ -287,6 +248,7 @@ window.addEventListener('load', function () {
 			campaignEndTime: "1733446800", // Thursday, December 5, 2024 8:00:00 PM
 			liveDateNice: "Monday, Dec. 2",
 			bonusRoundMessage: '<strong class=\"fs-full-line\">THANK YOU!!! WE DID IT!!</strong><span class=\"fs-smaller-text\">Thank you for helping us "Light Up The Night" and supporting our "United As One" Campaign. The site will remain active for the coming days and will accept contributions to be matched. Thank you to our generous matchers for making this a possibility. Am Yisroel Chai!</span>',
+			campaignOverMessage: `<div class="col-md-6 fs-countdown text-center d-js-viewport-in" data-effect="slideInLeft" data-effect-offset="0"><h3 class="fs-countdown-message"><strong>This campaign is over.</strong><br>You can still contribute to this campaign.</h3><div class="fs-right-triangle"><svg viewBox="0 0 1 1" preserveAspectRatio="none" class="svg-content"><polygon points="0.0 0, 1 0, 1 0.5, 1 1, 0 1, 1 0.5, 0 0" fill="#fff"></polygon></svg></div><div class="fs-bottom-triangle"><svg viewBox="0 0 1 1" preserveAspectRatio="none" class="svg-content"><polygon points="1 0, 1 0.5, 1 1, 0 1, 0 0, 0.5 1" fill="#F1F1F1"></polygon></svg></div></div>`,
 			homepageBanner: {
 				pre: {
 					wide: "/media/images/1251/LGgb12515092.jpg",
@@ -300,3 +262,8 @@ window.addEventListener('load', function () {
 		});
 	}
 });
+if (document.readyState == "complete") {
+	campaignFunctions();
+} else {
+	document.addEventListener("DOMContentLoaded", campaignFunctions);
+}
