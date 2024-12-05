@@ -228,7 +228,7 @@ const campaignFunctions = (function () {
 			function checkAndSetupSiteBy() {
 				if (isInCampaign()) {
 					$j('.fs-footer .fs-copyright').append(
-						"<span class='fs-site-by'>Site by <a href='https://theclickco.com'>Click Co</a><span>"
+						"<span class='fs-site-by'> Site by <a href='https://theclickco.com'>Click Co</a><span>"
 					);
 				}
 			}
