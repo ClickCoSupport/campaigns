@@ -199,7 +199,8 @@ const campaignFunctions = (function () {
 						jQuery(".fs-matchers .fs-matchers-intro .fs-smaller-text").append(" Our generous matchers will continue the triple-match until January 1st.");
 					} else if (isCampaignOver()) {
 						jQuery(".fs-matchers .fs-matchers-intro").html(campaignSettings.bonusRoundMessage);
-						jQuery(".fs-countdown").html(campaignSettings.campaignOverMessage);
+						jQuery(".fs-countdown-message").html(campaignSettings.campaignOverMessage);
+						centerCampaignOverMessage();
 					}
 				}
 			}
@@ -235,6 +236,11 @@ const campaignFunctions = (function () {
 			function checkAndSetupHomepageBanner() {
 				if (isSiteHomepage()) setupHomepageBanner();
 			}
+			function centerCampaignOverMessage() {
+				const style = "<style>.fs-countdown-widget {display: none !important;}.fs-countdowndonate .row {align-items: flex-start;}.fs-countdown.text-center {display: flex; align-items: center;}</style>";
+				document.head.insertAdjacentHTML('beforeend', style);
+			}
+
 			checkAndSetupHomepageBanner();
 			initializeCampaign();
 			checkAndSetupSiteBy();
@@ -248,7 +254,7 @@ const campaignFunctions = (function () {
 			campaignEndTime: "1733446800", // Thursday, December 5, 2024 8:00:00 PM
 			liveDateNice: "Monday, Dec. 2",
 			bonusRoundMessage: '<strong class=\"fs-full-line\">THANK YOU!!! WE DID IT!!</strong><span class=\"fs-smaller-text\">Thank you for helping us "Light Up The Night" and supporting our "United As One" Campaign. The site will remain active for the coming days and will accept contributions to be matched. Thank you to our generous matchers for making this a possibility. Am Yisroel Chai!</span>',
-			campaignOverMessage: `<div class="col-md-6 fs-countdown text-center d-js-viewport-in" data-effect="slideInLeft" data-effect-offset="0"><h3 class="fs-countdown-message"><strong>This campaign is over.</strong><br>You can still contribute to this campaign.</h3><div class="fs-right-triangle"><svg viewBox="0 0 1 1" preserveAspectRatio="none" class="svg-content"><polygon points="0.0 0, 1 0, 1 0.5, 1 1, 0 1, 1 0.5, 0 0" fill="#fff"></polygon></svg></div><div class="fs-bottom-triangle"><svg viewBox="0 0 1 1" preserveAspectRatio="none" class="svg-content"><polygon points="1 0, 1 0.5, 1 1, 0 1, 0 0, 0.5 1" fill="#F1F1F1"></polygon></svg></div></div>`,
+			campaignOverMessage: "<strong>This campaign is over.</strong><br>You can still contribute to this campaign.",
 			homepageBanner: {
 				pre: {
 					wide: "/media/images/1251/LGgb12515092.jpg",
